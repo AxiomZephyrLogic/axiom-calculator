@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AxiomCalculator - Hybrid Dev</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="nav-container">
+        <button id="standard-btn" class="nav-btn active">Standard Mode</button>
+        <button id="chat-btn" class="nav-btn">Chat Mode</button>
+    </header>
+
+    <main class="app-container">
+        
+        <section id="calculator-interface" class="interface-box">
+            <div class="calc-screen">
+                <div id="calc-expression" class="expression-line"></div>
+                <div id="calc-result" class="result-line">0</div>
+            </div>
+            
+            <div class="calc-grid">
+                <button class="key scientific" data-action="sin">sin</button>
+                <button class="key scientific" data-action="cos">cos</button>
+                <button class="key scientific" data-action="tan">tan</button>
+                <button class="key scientific" data-action="sqrt">√</button>
+                
+                <button class="key scientific" data-action="exp">xʸ</button>
+                <button class="key scientific" data-action="pi">π</button>
+                <button class="key scientific" data-action="log">log</button>
+                <button class="key control" data-action="delete">DEL</button>
+                
+                <button class="key number">7</button>
+                <button class="key number">8</button>
+                <button class="key number">9</button>
+                <button class="key operator">÷</button>
+                
+                <button class="key number">4</button>
+                <button class="key number">5</button>
+                <button class="key number">6</button>
+                <button class="key operator">×</button>
+                
+                <button class="key number">1</button>
+                <button class="key number">2</button>
+                <button class="key number">3</button>
+                <button class="key operator">-</button>
+                
+                <button class="key control" data-action="clear">AC</button>
+                <button class="key number">0</button>
+                <button class="key number">.</button>
+                <button class="key operator">+</button>
+                
+                <button class="key equals-btn" data-action="calculate">=</button>
+            </div>
+        </section>
+
+        <section id="chat-interface" class="interface-box hidden">
+            <div id="chat-stream" class="chat-box">
+                <div class="message bot-bubble">
+                    <p>Hello! I am AxiomBot. Type a math problem in words (e.g., "What is 45 times 2?") and I will solve it for you!</p>
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Ask AxiomBot a math question..." autocomplete="off">
+                <button id="send-btn">Send</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="main.js"></script>
+</body>
+      </html>
+                  
