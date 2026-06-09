@@ -1,5 +1,5 @@
 // ==========================================
-// 1. MODE SWITCHING LOGIC (The Toggle Rule)
+// 1. MODE SWITCHING LOGIC
 // ==========================================
 const standardBtn = document.getElementById('standard-btn');
 const chatBtn = document.getElementById('chat-btn');
@@ -22,13 +22,14 @@ chatBtn.addEventListener('click', () => {
 
 
 // ==========================================
-// 2. SCIENTIFIC CALCULATOR BRAIN (Interface A)
+// 2. CASIO-STYLE CALCULATOR LOGIC
 // ==========================================
 const calcExpression = document.getElementById('calc-expression');
 const calcResult = document.getElementById('calc-result');
 const keys = document.querySelectorAll('.key');
 
 let currentInput = '';
+let isEvaluated = false;
 
 keys.forEach(key => {
     key.addEventListener('click', () => {
@@ -36,86 +37,105 @@ keys.forEach(key => {
         const keyContent = key.textContent;
 
         if (!action) {
-            // It's a plain number or decimal point
-            if (calcResult.textContent === '0' || calcResult.textContent === 'Error') {
+            if (isEvaluated) {
                 currentInput = keyContent;
+                isEvaluated = false;
             } else {
-                currentInput += keyContent;
+                if (currentInput === '0') currentInput = keyContent;
+                else currentInput += keyContent;
             }
-            calcResult.textContent = currentInput;
+            calcExpression.textContent = currentInput;
+            calcResult.textContent = ''; 
         } else {
-            // It's a special functional action button
             switch (action) {
                 case 'clear':
                     currentInput = '';
                     calcExpression.textContent = '';
                     calcResult.textContent = '0';
+                    isEvaluated = false;
                     break;
+                    
                 case 'delete':
-                    currentInput = currentInput.slice(0, -1);
-                    calcResult.textContent = currentInput || '0';
+                    if (isEvaluated) {
+                        currentInput = '';
+                        calcExpression.textContent = '';
+                        calcResult.textContent = '0';
+                        isEvaluated = false;
+                    } else {
+                        currentInput = currentInput.slice(0, -1);
+                        calcExpression.textContent = currentInput || '0';
+                    }
                     break;
+                    
+                case 'operator':
+                    if (isEvaluated) isEvaluated = false;
+                    const lastChar = currentInput.slice(-1);
+                    if (['+', '-', '×', '÷'].includes(lastChar)) {
+                        currentInput = currentInput.slice(0, -1) + keyContent;
+                    } else {
+                        currentInput += keyContent;
+                    }
+                    calcExpression.textContent = currentInput;
+                    break;
+                    
                 case 'calculate':
+                    if (!currentInput) return;
                     try {
-                        // Map visual signs to standard math signs before evaluating
                         let formattedFormula = currentInput
                             .replace(/×/g, '*')
                             .replace(/÷/g, '/');
                         
-                        calcExpression.textContent = currentInput + ' =';
-                        
-                        // Use JavaScript's evaluator engine to solve it safely
                         let evalResult = Function('"use strict";return (' + formattedFormula + ')')();
-                        calcResult.textContent = Number(evalResult).toLocaleString();
+                        
+                        if (evalResult % 1 !== 0) {
+                            evalResult = parseFloat(evalResult.toFixed(6));
+                        }
+                        
+                        calcExpression.textContent = currentInput;
+                        calcResult.textContent = evalResult;
                         currentInput = evalResult.toString();
+                        isEvaluated = true;
                     } catch (error) {
                         calcResult.textContent = 'Error';
                         currentInput = '';
                     }
                     break;
-                case 'sin':
-                    runScientificMath(Math.sin, 'sin');
-                    break;
-                case 'cos':
-                    runScientificMath(Math.cos, 'cos');
-                    break;
-                case 'tan':
-                    runScientificMath(Math.tan, 'tan');
-                    break;
-                case 'sqrt':
-                    runScientificMath(Math.sqrt, '√');
-                    break;
-                case 'log':
-                    runScientificMath(Math.log10, 'log');
-                    break;
+                    
+                case 'sin': runCasioSci(Math.sin, 'sin'); break;
+                case 'cos': runCasioSci(Math.cos, 'cos'); break;
+                case 'tan': runCasioSci(Math.tan, 'tan'); break;
+                case 'sqrt': runCasioSci(Math.sqrt, '√'); break;
+                case 'log': runCasioSci(Math.log10, 'log'); break;
+                
                 case 'pi':
-                    currentInput += Math.PI.toFixed(4);
-                    calcResult.textContent = currentInput;
+                    if (isEvaluated) { currentInput = Math.PI.toFixed(4); isEvaluated = false; }
+                    else currentInput += Math.PI.toFixed(4);
+                    calcExpression.textContent = currentInput;
                     break;
                 case 'exp':
-                    currentInput += '**'; // JavaScript's power engine exponent operator
-                    calcResult.textContent = currentInput;
+                    currentInput += '**'; 
+                    calcExpression.textContent = currentInput;
                     break;
             }
         }
     });
 });
 
-// Helper function to handle complex scientific formulas instantly
-function runScientificMath(mathFunc, label) {
+function runCasioSci(mathFunc, label) {
     try {
-        let value = parseFloat(calcResult.textContent);
+        let value = parseFloat(currentInput) || parseFloat(calcResult.textContent);
         if (isNaN(value)) return;
         
-        // Convert degrees to radians for WAEC standard trigonometry compliance
+        let displayValue = value;
         if (['sin', 'cos', 'tan'].includes(label)) {
             value = value * (Math.PI / 180);
         }
         
         let result = mathFunc(value);
-        calcExpression.textContent = `${label}(${calcResult.textContent})`;
+        calcExpression.textContent = `${label}(${displayValue})`;
         calcResult.textContent = parseFloat(result.toFixed(6));
         currentInput = calcResult.textContent;
+        isEvaluated = true;
     } catch (e) {
         calcResult.textContent = 'Error';
     }
@@ -123,12 +143,52 @@ function runScientificMath(mathFunc, label) {
 
 
 // ==========================================
-// 3. AXIOMBOT CHATPARSER MATH BRAIN (Interface B)
+// 3. AXIOMBOT CHAT ENGINE & VOICE LOGIC
 // ==========================================
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
+const micBtn = document.getElementById('mic-btn');
 const chatStream = document.getElementById('chat-stream');
 
+// --- VOICE RECOGNITION SETUP ---
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    micBtn.addEventListener('click', () => {
+        try {
+            recognition.start();
+            micBtn.style.background = "#ef4444"; // Red indicator for active recording
+            micBtn.textContent = "🛑";
+            userInput.placeholder = "Listening closely...";
+        } catch (e) {
+            recognition.stop();
+        }
+    });
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript; // Output the words instantly into the text input box
+    };
+
+    recognition.onend = () => {
+        micBtn.style.background = "rgba(255,255,255,0.1)";
+        micBtn.textContent = "🎙️";
+        userInput.placeholder = "Ask a question or tap mic...";
+    };
+
+    recognition.onerror = () => {
+        userInput.placeholder = "Voice access denied or timed out.";
+    };
+} else {
+    micBtn.style.display = 'none'; // Hide button safely if browser doesn't support speech
+}
+
+// --- MESSAGE SUBMISSION & ERROR CORRECTION ---
 sendBtn.addEventListener('click', handleChatSubmit);
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleChatSubmit();
@@ -138,47 +198,59 @@ function handleChatSubmit() {
     const rawText = userInput.value.trim();
     if (!rawText) return;
 
-    // 1. Show user input message bubble instantly
     appendBubble(rawText, 'user-bubble');
     userInput.value = '';
 
-    // 2. Clean text for evaluation (Lowercase)
     const text = rawText.toLowerCase();
-
-    // 3. Extract regular numbers out of the string sentence using Regex patterns
     const numbers = text.match(/\d+/g);
+    let botResponse = "I can definitely analyze that problem. Could you provide the specific numbers or variables involved so I can process the steps?";
 
-    let botResponse = "I'm still learning! Try phrasing it with clear math keywords like 'plus', 'minus', 'times', or 'divide'.";
+    // --- DETECT AND CORRECT MISTAKES LOGIC ---
+    let correctionMade = false;
+    let correctionNotice = "";
 
-    if (numbers && numbers.length >= 2) {
-        const num1 = parseInt(numbers[0]);
-        const num2 = parseInt(numbers[1]);
-        
-        // 4. Find the matching operation type based on written text keywords
-        if (text.includes('plus') || text.includes('add') || text.includes('+')) {
-            botResponse = `That's ${num1 + num2}! What else can I calculate for you?`;
-        } else if (text.includes('minus') || text.includes('subtract') || text.includes('-')) {
-            botResponse = `That's ${num1 - num2}! What else can I calculate for you?`;
-        } else if (text.includes('times') || text.includes('multiply') || text.includes('x')) {
-            botResponse = `That's ${num1 * num2}! What else can I calculate for you?`;
-        } else if (text.includes('divide') || text.includes('shared by')) {
-            if (num2 === 0) {
-                botResponse = "I can't divide by zero! That calculation is undefined.";
-            } else {
-                botResponse = `That's ${num1 / num2}! What else can I calculate for you?`;
+    if (text.includes('divide') && text.includes('0')) {
+        // Catching division by zero instantly
+        botResponse = "⚠️ <strong>Error Detected:</strong> You are attempting to divide by zero. In core physics and arithmetic, division by zero results in an undefined parameter. Please update your expression with a non-zero denominator.";
+        correctionMade = true;
+    } else if ((text.includes('plus') || text.includes('add') || text.includes('minus') || text.includes('times') || text.includes('multiply')) && (!numbers || numbers.length < 2)) {
+        // Catching incomplete arithmetic inputs (e.g. saying "What is 5 plus")
+        botResponse = "⚠️ <strong>Incomplete Equation:</strong> I noticed you mentioned an operational modifier but only supplied one target value. For a proper linear operation, please specify both values (e.g., 'What is 5 plus 12?').";
+        correctionMade = true;
+    }
+
+    // --- CONVERSATIONAL ROUTINES (If no structural mathematical error was found) ---
+    if (!correctionMade) {
+        if (text.includes('hello') || text.includes('hi ') || text === 'hi' || text.includes('hey')) {
+            botResponse = "Hello! I am here and fully ready. Hit me with any mathematical, physical, or arithmetic problem, and let's break it down!";
+        } else if (text.includes('how are you')) {
+            botResponse = "I am operating perfectly at maximum capacity! Ready to tackle your calculations, physics parameters, or structural problems. What are we solving?";
+        } else if (text.includes('thank you') || text.includes('thanks') || text.includes('cool') || text.includes('nice')) {
+            botResponse = "You're highly welcome! Keeping things sharp and mathematically precise is what I do best. Let me know when you have another question.";
+        } else if (numbers && numbers.length >= 2) {
+            const num1 = parseInt(numbers[0]);
+            const num2 = parseInt(numbers[1]);
+            
+            if (text.includes('plus') || text.includes('add') || text.includes('+')) {
+                botResponse = `The sum of ${num1} and ${num2} equals ${num1 + num2}.`;
+            } else if (text.includes('minus') || text.includes('subtract') || text.includes('-')) {
+                botResponse = `Subtracting ${num2} from ${num1} gives you ${num1 - num2}.`;
+            } else if (text.includes('times') || text.includes('multiply') || text.includes('x') || text.includes('*')) {
+                botResponse = `Multiplying ${num1} by ${num2} yields ${num1 * num2}.`;
+            } else if (text.includes('divide') || text.includes('shared by') || text.includes('/')) {
+                botResponse = `Dividing ${num1} by ${num2} results in ${num1 / num2}.`;
             }
-        }
-    } else if (numbers && numbers.length === 1) {
-        const num = parseInt(numbers[0]);
-        if (text.includes('square root') || text.includes('sqrt')) {
-            botResponse = `The square root of ${num} is ${Math.sqrt(num).toFixed(4)}!`;
+        } else if (numbers && numbers.length === 1) {
+            const num = parseInt(numbers[0]);
+            if (text.includes('square root') || text.includes('sqrt') || text.includes('√')) {
+                botResponse = `The square root of ${num} is evaluated as ${Math.sqrt(num).toFixed(4)}.`;
+            }
         }
     }
 
-    // Delay the bot's response bubble slightly to simulate human conversational speed
     setTimeout(() => {
         appendBubble(botResponse, 'bot-bubble');
-    }, 600);
+    }, 500);
 }
 
 function appendBubble(text, className) {
@@ -186,6 +258,6 @@ function appendBubble(text, className) {
     bubble.classList.add('message', className);
     bubble.innerHTML = `<p>${text}</p>`;
     chatStream.appendChild(bubble);
-    chatStream.scrollTop = chatStream.scrollHeight; // Keep message stream scrolling upward automatically
-  }
-          
+    chatStream.scrollTop = chatStream.scrollHeight;
+        }
+                                        
