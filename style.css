@@ -1,0 +1,206 @@
+/* RESET & CORE STYLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background-color: #0f1115;
+    color: #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 1. NAVIGATION BAR */
+.nav-container {
+    display: flex;
+    gap: 10px;
+    background-color: #1a1d24;
+    padding: 6px;
+    border-radius: 30px;
+    margin-bottom: 25px;
+    border: 1px solid #2d3139;
+    width: 100%;
+    max-width: 360px;
+}
+
+.nav-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn.active {
+    background-color: #2e3440;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 2. APP BOX INTERFACES */
+.app-container {
+    width: 100%;
+    max-width: 360px;
+    background-color: #161920;
+    border-radius: 24px;
+    border: 1px solid #242933;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.interface-box {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 3. SCIENTIFIC CALCULATOR STYLING */
+.calc-screen {
+    background-color: #0a0b0d;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: right;
+    margin-bottom: 20px;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border: 1px solid #1c1f26;
+}
+
+.expression-line {
+    font-size: 14px;
+    color: #64748b;
+    min-height: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.result-line {
+    font-size: 32px;
+    font-weight: bold;
+    color: #e2e8f0;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.key {
+    background-color: #1e222b;
+    border: 1px solid #2a2f3d;
+    color: #e2e8f0;
+    padding: 18px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.key:active {
+    background-color: #2d3342;
+}
+
+.key.scientific {
+    background-color: #152238;
+    border-color: #1d3356;
+    color: #38bdf8;
+    font-size: 14px;
+}
+
+.key.operator {
+    background-color: #2d241e;
+    border-color: #45352b;
+    color: #f97316;
+}
+
+.key.control {
+    background-color: #2d1e1e;
+    border-color: #452b2b;
+    color: #ef4444;
+    font-size: 14px;
+}
+
+.key.equals-btn {
+    grid-column: span 4;
+    background-color: #059669;
+    border-color: #047857;
+    color: white;
+}
+
+/* 4. CHAT INTERFACE STYLING */
+.chat-box {
+    height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 15px;
+}
+
+.message {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.bot-bubble {
+    background-color: #222733;
+    color: #e2e8f0;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.user-bubble {
+    background-color: #059669;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+#user-input {
+    flex: 1;
+    background-color: #0a0b0d;
+    border: 1px solid #242933;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: white;
+    outline: none;
+}
+
+#send-btn {
+    background-color: #059669;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-weight: 600;
+}
