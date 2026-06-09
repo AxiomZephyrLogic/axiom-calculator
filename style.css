@@ -7,8 +7,9 @@
 }
 
 body {
-    background-color: #0f1115;
-    color: #e2e8f0;
+    /* A premium, energetic bright-gradient background */
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+    color: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,15 +17,16 @@ body {
     padding: 20px;
 }
 
-/* 1. NAVIGATION BAR */
+/* 1. BRIGHT NAVIGATION BAR */
 .nav-container {
     display: flex;
-    gap: 10px;
-    background-color: #1a1d24;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
     padding: 6px;
     border-radius: 30px;
     margin-bottom: 25px;
-    border: 1px solid #2d3139;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     width: 100%;
     max-width: 360px;
 }
@@ -33,148 +35,166 @@ body {
     flex: 1;
     background: none;
     border: none;
-    color: #94a3b8;
-    padding: 10px 16px;
+    color: #cbd5e1;
+    padding: 12px 16px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: 25px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
+/* Active mode button lights up beautifully */
 .nav-btn.active {
-    background-color: #2e3440;
+    background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
 }
 
-/* 2. APP BOX INTERFACES */
+/* 2. THE CHAMELEON APP CONTAINER */
 .app-container {
     width: 100%;
     max-width: 360px;
-    background-color: #161920;
-    border-radius: 24px;
-    border: 1px solid #242933;
+    background: rgba(20, 20, 30, 0.75);
+    backdrop-filter: blur(16px);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
 }
 
 .interface-box {
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 24px;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* 3. SCIENTIFIC CALCULATOR STYLING */
+/* ==========================================
+   INTERFACE A: SCIENTIFIC CALCULATOR GLOW
+   ========================================== */
 .calc-screen {
-    background-color: #0a0b0d;
-    padding: 20px;
-    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 22px;
+    border-radius: 20px;
     text-align: right;
-    margin-bottom: 20px;
-    min-height: 90px;
+    margin-bottom: 22px;
+    min-height: 105px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    border: 1px solid #1c1f26;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
 }
 
 .expression-line {
     font-size: 14px;
-    color: #64748b;
+    color: #f472b6; /* Neon Pink accent */
     min-height: 20px;
-    overflow-x: auto;
-    white-space: nowrap;
+    font-weight: 500;
+    margin-bottom: 4px;
 }
 
 .result-line {
-    font-size: 32px;
-    font-weight: bold;
-    color: #e2e8f0;
-    overflow-x: auto;
-    white-space: nowrap;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(255,255,255,0.2);
 }
 
 .calc-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 10px;
 }
 
 .key {
-    background-color: #1e222b;
-    border: 1px solid #2a2f3d;
-    color: #e2e8f0;
-    padding: 18px 0;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
+    padding: 16px 0;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 16px;
     cursor: pointer;
-    transition: background 0.1s;
+    transition: all 0.2s ease;
 }
 
 .key:active {
-    background-color: #2d3342;
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.15);
 }
 
+/* Electric Cyan for Scientific Operations */
 .key.scientific {
-    background-color: #152238;
-    border-color: #1d3356;
+    background: rgba(14, 165, 233, 0.15);
+    border-color: rgba(14, 165, 233, 0.3);
     color: #38bdf8;
-    font-size: 14px;
+    font-size: 15px;
 }
 
+/* Vibrant Orange for Basic Arithmetic */
 .key.operator {
-    background-color: #2d241e;
-    border-color: #45352b;
-    color: #f97316;
+    background: rgba(249, 115, 22, 0.15);
+    border-color: rgba(249, 115, 22, 0.3);
+    color: #fb923c;
 }
 
+/* Neon Crimson for Delete/Clear */
 .key.control {
-    background-color: #2d1e1e;
-    border-color: #452b2b;
-    color: #ef4444;
-    font-size: 14px;
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    font-size: 15px;
 }
 
+/* Hyper-gradient for the Equals Key */
 .key.equals-btn {
     grid-column: span 4;
-    background-color: #059669;
-    border-color: #047857;
+    background: linear-gradient(90deg, #3b82f6 0%, #22c55e 100%);
+    border: none;
     color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
 }
 
-/* 4. CHAT INTERFACE STYLING */
+/* ==========================================
+   INTERFACE B: CHAT INTERFACE VIBRANCY
+   ========================================== */
 .chat-box {
-    height: 300px;
+    height: 320px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding-bottom: 15px;
+    gap: 14px;
+    padding-right: 4px;
 }
 
 .message {
     max-width: 85%;
     padding: 12px 16px;
-    border-radius: 16px;
+    border-radius: 20px;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.5;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
+/* Cool slate-violet bubble for AxiomBot */
 .bot-bubble {
-    background-color: #222733;
-    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
     align-self: flex-start;
     border-bottom-left-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Gorgeous Electric Purple bubble for User */
 .user-bubble {
-    background-color: #059669;
+    background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
     color: white;
     align-self: flex-end;
     border-bottom-right-radius: 4px;
@@ -182,25 +202,34 @@ body {
 
 .chat-input-area {
     display: flex;
-    gap: 8px;
-    margin-top: 10px;
+    gap: 10px;
+    margin-top: 16px;
 }
 
 #user-input {
     flex: 1;
-    background-color: #0a0b0d;
-    border: 1px solid #242933;
-    padding: 12px 16px;
-    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 18px;
+    border-radius: 16px;
     color: white;
     outline: none;
+    font-size: 14px;
+    transition: border 0.3s;
+}
+
+#user-input:focus {
+    border-color: #ec4899;
 }
 
 #send-btn {
-    background-color: #059669;
+    background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
     color: white;
     border: none;
-    padding: 0 16px;
-    border-radius: 12px;
-    font-weight: 600;
-}
+    padding: 0 20px;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+    }
+        
